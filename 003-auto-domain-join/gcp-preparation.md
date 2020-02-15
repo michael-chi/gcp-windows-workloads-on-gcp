@@ -23,4 +23,8 @@ export SERVERLESS_REGION=serverless-region
 export SERVERLESS_IP_RANGE=serverless-ip-range
 ```
 
--   Clone sample domain join applications from [here](https://github.com/GoogleCloudPlatform/gce-automated-ad-join/tree/master/register-computer). 
+-   Clone sample domain join applications from [here](https://github.com/GoogleCloudPlatform/gce-automated-ad-join/tree/master/register-computer).
+
+    Also created a [Dockerfile](./src//auto-domain-join/register-computer/Dockerfile) so that we can deploy it to servives such as GKE.
+
+-   Build docker image and push to Google Container Registry
