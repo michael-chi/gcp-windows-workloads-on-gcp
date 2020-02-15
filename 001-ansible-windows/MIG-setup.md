@@ -1,6 +1,6 @@
 ##  Managed Instance Group
 
-####    Quick Demo
+####    Create Image and Instance Template
 
 -   Create a Windows Machine and install everything
 
@@ -18,7 +18,7 @@
 
 key|value
 ---------------|:--:|
-windows-startup-script-url|<URL>/shutdown.cmd|
+windows-startup-script-url|\<URL\>/setup.cmd|
 
 -   Startup Script
 
@@ -47,3 +47,23 @@ netdom remove %computername% /domain:domainname /userD:demo.local\kalschi /passw
 -   Create an Instance Group with length of name less than 10 bytes
 
 Name of the instance group become hostname prefix of our provisioned instances. Windows allows only 15 cahracters as computer name alias, and MIG automatically append a random string of 4 characters with "-" to MIG name. So we have 10 characters as our MIG name.
+
+####    Create Load Balancer
+
+-   Create a HTTP Load Balancer with backend service of MIG created above
+
+<img src="../docs/img/mig-lb-create-backendservice.png" style="height:400px;width:300px"/>
+
+-   Setup frontend
+
+<img src="../docs/img/mig-lb-setup-frontend.png" style="height:400px;width:300px"/>
+
+-   Create Load Balancer
+
+####    Firewall
+
+-   Create a firewall rule to allow [health check traffic](https://cloud.google.com/load-balancing/docs/health-checks#fw-rule) from below IP address ranges
+
+    -   35.191.0.0/16
+    -   130.211.0.0/22
+
