@@ -12,16 +12,14 @@ export ZONE=[ZONE]
 
 export true='$true'
 export text='$text'
-export METADATA="sysprep-specialize-script-ps1=[System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true};[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Ssl3;$text=(New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'); iex($text)"
 
-
-gcloud compute instances create verify-join-04 \
+gcloud compute instances create verify-join-05 \
 --image-family=windows-2016-core \
 --image-project=windows-cloud \
 --machine-type=n1-standard-2 \
 --no-address \
 --subnet=$VPC_SUBNET \
 --zone=$ZONE \
---metadata=$METADATA \
+"--metadata=sysprep-specialize-script-ps1=[System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true};[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Ssl3;$text=(New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'); iex($text)" \
 --project=$TEST_PROJECT_ID
 ```

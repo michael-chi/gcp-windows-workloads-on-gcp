@@ -55,6 +55,7 @@ class ConfigurationException(Exception):
 def __read_required_setting(key):
     if not key in os.environ:
         logging.fatal("%s not defined in environment" % key)
+        print ("Key%s not defined in environment" % key)
         raise ConfigurationException("Incomplete configuration, see logs")
     else:
         return os.environ[key]
@@ -127,7 +128,7 @@ def __register_computer(request):
     """
         Create a computer account for the joining computer.
     """
-
+    print ("Calling Register Computer...")
     # Only accept requests with an Authorization header.
     headerName = "Authorization"
     if not headerName in request.headers:
@@ -143,6 +144,8 @@ def __register_computer(request):
             "https://%s/" % request.host)
     except gcp.auth.AuthorizationException as e:
         logging.exception("Authentication failed")
+        print ("Authentication failed: %s" % e)
+    
         return flask.abort(HTTP_ACCESS_DENIED)
 
     # Connect to Active Directory so that we can authorize the request.
