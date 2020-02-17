@@ -419,6 +419,6 @@ if __name__ == "__main__":
 
     def index():
         return register_computer(request)
-    app.run('0.0.0.0', debug=True, port=443, ssl_context=('./server.crt', './server.key'))  
-    # app.run(host='0.0.0.0', port=80)
-    #   app.run()
+    # app.run('0.0.0.0', debug=True, port=443, ssl_context=('./server.crt', './server.key'))  
+    app.run(host='0.0.0.0', port=80)
+    # app.run()
