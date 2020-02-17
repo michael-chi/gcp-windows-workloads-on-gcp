@@ -22,6 +22,8 @@ gcloud compute instances create verify-join-01 \
 --project=$TEST_PROJECT_ID
 ```
 
+<img src="../docs/img/verify-domain-join.png" style="width=600px;height=250px"/>
+
 
 ####    Create new VM with HTTPS Domain Join API Endpoint
 
