@@ -1,9 +1,10 @@
 From python:latest
 
 RUN mkdir /app
-
+COPY ../Makefile /app
 COPY . /app
 WORKDIR /app
+
 RUN pip install -r requirements.txt
 
 RUN openssl req \

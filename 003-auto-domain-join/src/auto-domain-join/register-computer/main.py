@@ -55,16 +55,20 @@ class ConfigurationException(Exception):
 def __read_required_setting(key):
     if not key in os.environ:
         logging.fatal("%s not defined in environment" % key)
-        print ("Key%s not defined in environment" % key)
+        logging.info ("Key%s not defined in environment" % key)
         raise ConfigurationException("Incomplete configuration, see logs")
     else:
+        logging.info ("Key %s found " % key)
+        logging.info("==> %s" % os.environ[key])
         return os.environ[key]
 
 def __read_ad_password():
     if "AD_PASSWORD" in os.environ:
         # Cleartext password provided (useful for testing).
+        logging.info("PASSWORD = %s" % os.environ["AD_PASSWORD"])
         return os.environ["AD_PASSWORD"]
     else:
+        logging.info("NO PASSWORD FOUND")
         # Decrypt password cipher using the Cloud KMS key provided.
         return google.cloud.kms_v1.KeyManagementServiceClient().decrypt(
             __read_required_setting("CLOUDKMS_KEY"),
@@ -117,7 +121,7 @@ def __serve_join_script(request):
     it is safe to provide it without authentication.
     """
     with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "join.ps1"), 'r') as file:
-        print("DOMAIN=" + request.host)
+        logging.info("DOMAIN=" + request.host)
         join_script = file.read().replace(
             "%domain%",
             request.host)
@@ -128,7 +132,7 @@ def __register_computer(request):
     """
         Create a computer account for the joining computer.
     """
-    print ("Calling Register Computer...")
+    logging.info ("Calling Register Computer...")
     # Only accept requests with an Authorization header.
     headerName = "Authorization"
     if not headerName in request.headers:
@@ -144,7 +148,7 @@ def __register_computer(request):
             "https://%s/" % request.host)
     except gcp.auth.AuthorizationException as e:
         logging.exception("Authentication failed")
-        print ("Authentication failed: %s" % e)
+        logging.info ("Authentication failed: %s" % e)
     
         return flask.abort(HTTP_ACCESS_DENIED)
 
@@ -390,19 +394,19 @@ def register_computer(request):
     """
         Cloud Functions entry point.
     """
-    print("request.path=%s" % request.path)
-    print("request method=%s" % request.method)
+    logging.info("request.path=%s" % request.path)
+    logging.info("request method=%s" % request.method)
     if request.path == "/cleanup" and request.method == "POST":
-        print("serving __cleanup_computers")
+        logging.info("serving __cleanup_computers")
         return __cleanup_computers(request)
     elif request.path == "/register-computer" and request.method == "GET":
-        print("serving __serve_join_script")
+        logging.info("serving __serve_join_script")
         return __serve_join_script(request)
     elif request.path == "/register-computer" and request.method == "POST":
-        print("serving __register_computer")
+        logging.info("serving __register_computer")
         return __register_computer(request)
     else:
-        print("serving HTTP_BAD_METHOD")
+        logging.info("serving HTTP_BAD_METHOD")
         return flask.abort(HTTP_BAD_METHOD)
 
 

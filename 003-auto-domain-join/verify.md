@@ -1,6 +1,29 @@
 ##  Overview
 
-####    Create new VM
+####    Create new VM with HTTP Domain Join API Endpoint
+
+-   Create a new virutal machine
+
+```shell
+export REGISTER_URL=http://[GCP_DEFAULT_INTERNAL_FQDN]/register-computer
+export VPC_REGION=[VPC_REGION]
+export VPC_SUBNET=[SUBNET_NAME]
+export ZONE=[ZONE]
+export TEST_PROJECT_ID=$DOMAIN_PROJECT_ID
+
+gcloud compute instances create verify-join-01 \
+--image-family=windows-2016-core \
+--image-project=windows-cloud \
+--machine-type=n1-standard-2 \
+--no-address \
+--subnet=$VPC_SUBNET \
+--zone=$ZONE \
+"--metadata=sysprep-specialize-script-ps1=$text=(New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'); iex($text)" \
+--project=$TEST_PROJECT_ID
+```
+
+
+####    Create new VM with HTTPS Domain Join API Endpoint
 
 -   Create a new virutal machine
 
@@ -13,7 +36,7 @@ export TEST_PROJECT_ID=$DOMAIN_PROJECT_ID
 export true='$true'
 export text='$text'
 
-gcloud compute instances create verify-join-05 \
+gcloud compute instances create verify-join-01 \
 --image-family=windows-2016-core \
 --image-project=windows-cloud \
 --machine-type=n1-standard-2 \
