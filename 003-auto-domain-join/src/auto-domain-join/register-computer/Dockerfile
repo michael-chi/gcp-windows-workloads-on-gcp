@@ -6,7 +6,7 @@ COPY . /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt
-RUN apt-get install build-essential
+# RUN apt-get install build-essential
 RUN make
 RUN openssl req \
     -new \
