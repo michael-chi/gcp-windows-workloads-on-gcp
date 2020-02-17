@@ -21,6 +21,10 @@ Cloud Function ->> Windows VM: computer account credential
 Windows VM ->> Domain Controller: Join domain
 Windows VM ->> Windows VM: Reboot
 ```
-##  Preparation
+##  Table of Content
 
-##  
+[Domain Preparation](./domain-preparation.md)
+
+[GCP Preparation](./gcp-preparation.md)
+
+[Verify Domain auto join](./verify.md)

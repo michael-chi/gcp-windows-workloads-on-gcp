@@ -388,9 +388,9 @@ def register_computer(request):
     """
     if request.path == "/cleanup" and request.method == "POST":
         return __cleanup_computers(request)
-    elif request.path == "/" and request.method == "GET":
+    elif request.path == "/register-computer" and request.method == "GET":
         return __serve_join_script(request)
-    elif request.path == "/" and request.method == "POST":
+    elif request.path == "/register-computer" and request.method == "POST":
         return __register_computer(request)
     else:
         return flask.abort(HTTP_BAD_METHOD)
@@ -403,9 +403,9 @@ if __name__ == "__main__":
     app = Flask(__name__)
     app.debug=False
 
-    @app.route("/", methods=['GET', 'POST'])
+    @app.route("/register-computer", methods=['GET', 'POST'])
     @app.route("/cleanup", methods=['GET', 'POST'])
     def index():
         return register_computer(request)
-
-    app.run()
+    app.run(host='0.0.0.0', port=80)
+    #   app.run()
