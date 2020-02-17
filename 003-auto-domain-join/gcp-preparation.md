@@ -45,18 +45,34 @@ export SERVERLESS_IP_RANGE=serverless-ip-range
 
     Also created a [Dockerfile](./src//auto-domain-join/register-computer/Dockerfile) so that we can deploy it to servives such as GKE.
 
--   Build docker image and push to Google Container Registry
+-   Create Dockerfile. To support HTTPS, I have below openssl to generate self-signed SSL for HTTPS where CN set to GCE's default internal FQDN (INSTANCE_NAME.c.PROJECT_ID.internal) as in the codes it requires HTTPS protocol.
 
+```Dockerfile
+### ...
+RUN openssl req \
+    -new \
+    -newkey rsa:4096 \
+    -days 365 \
+    -nodes \
+    -x509 \
+    -subj "/C=TW/ST=Taiwan/L=Taipei/O=GCP/CN=domainjoinapi.c.PROJECT_ID.internal" \
+    -keyout server.key \
+    -out server.crt
+```
+-   Run below command to build and push container image to GCR
 ```shell
 docker build . -t gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest
 docker push gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest
 ```
 
--   Deploy container to Compute Engine
+-   Deploy API container to Compute Engine
 
 ```shell
 export INSTANCE_NAME=domainjoinapi
-gcloud beta compute --project=$DOMAIN_PROJECT_ID instances create-with-container $INSTANCE_NAME --zone=asia-east1-b --machine-type=n1-standard-1 --subnet=$VPC_NAME --metadata=google-logging-enabled=true,google-monitoring-enabled=true --scopes=https://www.googleapis.com/auth/cloud-platform --tags=http-server,https-server --image=cos-stable-80-12739-68-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=$INSTANCE_NAME --container-image=gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest --container-restart-policy=always
+export PASSWORD=[DOMAI JOIN USER PASSWORD]
+
+gcloud beta compute --project=$DOMAIN_PROJECT_ID instances create-with-container $INSTANCE_NAME --zone=asia-east1-b --machine-type=n1-standard-1 --subnet=$VPC_NAME --metadata=google-logging-enabled=true,google-monitoring-enabled=true --scopes=https://www.googleapis.com/auth/cloud-platform --tags=http-server,https-server --image=cos-stable-80-12739-68-0 --image-project=cos-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=$INSTANCE_NAME --container-image=gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest --container-restart-policy=always \
+ --container-env AD_DOMAIN=demo.local,AD_USERNAME=kalschi,PROJECTS_DN=OU="xxx,OU=GCP,OU=Cloud,DC=demo,DC=local",AD_PASSWORD=$PASSWORD
 
 ##  Create firewall rules when required
 # gcloud compute --project=$DOMAIN_PROJECT_ID firewall-rules create default-allow-http --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:80 --source-ranges=0.0.0.0/0 --target-tags=http-server

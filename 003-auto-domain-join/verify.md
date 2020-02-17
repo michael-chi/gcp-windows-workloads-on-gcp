@@ -5,19 +5,23 @@
 -   Create a new virutal machine
 
 ```shell
-export REGISTER_URL=https://[DOMAIN_JOIN_API_INTERNAL_IP]/register-computer
+export REGISTER_URL=https://[GCP_DEFAULT_INTERNAL_FQDN]/register-computer
 export VPC_REGION=[VPC_REGION]
 export VPC_SUBNET=[SUBNET_NAME]
 export ZONE=[ZONE]
 
-gcloud compute instances create verify-join-01 \
- --image-family=windows-2016-core \
- --image-project=windows-cloud \
- --machine-type=n1-standard-2 \
- --no-address \
- --subnet=$VPC_SUBNET \
- --zone=$ZONE \
- "--metadata=sysprep-specialize-script-ps1=iex((New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'))" \
- --project=$TEST_PROJECT_ID \
- --container-env AD_DOMAIN=demo.local,AD_USERNAME=kalschi,PROJECTS_DN=OU="xxx,OU=GCP,OU=Cloud,DC=demo,DC=local",AD_PASSWORD=$PASSWORD
+export true='$true'
+export text='$text'
+export METADATA="sysprep-specialize-script-ps1=[System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true};[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Ssl3;$text=(New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'); iex($text)"
+
+
+gcloud compute instances create verify-join-04 \
+--image-family=windows-2016-core \
+--image-project=windows-cloud \
+--machine-type=n1-standard-2 \
+--no-address \
+--subnet=$VPC_SUBNET \
+--zone=$ZONE \
+--metadata=$METADATA \
+--project=$TEST_PROJECT_ID
 ```

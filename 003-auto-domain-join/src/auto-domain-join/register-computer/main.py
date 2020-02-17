@@ -116,6 +116,7 @@ def __serve_join_script(request):
     it is safe to provide it without authentication.
     """
     with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "join.ps1"), 'r') as file:
+        print("DOMAIN=" + request.host)
         join_script = file.read().replace(
             "%domain%",
             request.host)
@@ -407,5 +408,6 @@ if __name__ == "__main__":
     @app.route("/cleanup", methods=['GET', 'POST'])
     def index():
         return register_computer(request)
-    app.run(host='0.0.0.0', port=80)
+    app.run('0.0.0.0', debug=True, port=443, ssl_context=('./server.crt', './server.key'))  
+    # app.run(host='0.0.0.0', port=80)
     #   app.run()

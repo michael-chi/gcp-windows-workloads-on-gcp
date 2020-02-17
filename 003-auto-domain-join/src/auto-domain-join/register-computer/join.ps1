@@ -27,6 +27,11 @@
 #--------------------------------------------------------------------------------------------
 
 $ErrorActionPreference = "Stop"
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback ={$true}
+[Net.ServicePointManager]::SecurityProtocol="Tls12, Tls11, Tls, Ssl3"
+
+
+echo "https://%domain%/register-computer"
 
 # Fetch IdToken that we can use to authenticate the instance with.
 $IdToken = (Invoke-RestMethod `
