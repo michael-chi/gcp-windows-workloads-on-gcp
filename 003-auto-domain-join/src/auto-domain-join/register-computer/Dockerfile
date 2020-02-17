@@ -1,12 +1,13 @@
 From python:latest
 
 RUN mkdir /app
-COPY ../Makefile /app
+
 COPY . /app
 WORKDIR /app
 
 RUN pip install -r requirements.txt
-
+RUN apt-get install build-essential
+RUN make
 RUN openssl req \
     -new \
     -newkey rsa:4096 \

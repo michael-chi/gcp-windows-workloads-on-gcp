@@ -18,27 +18,6 @@ We need to setup our GCP project in order to access domain resources. There are 
 
 -   Compute Engine
 
-####    Setup Serverless VPC Access (Required for Cloud Functions)
-
--   Go to Google Cloud Console
-
--   Open up Cloud shell
-
--   Execute below commands, where
-
-    -   your_gcp_project is your GCP project id
-    -   vpc-name is your vpn name which will be using for Serverless VPC access
-    -   serverless-region is the region you used for serverless VPC access
-    -   serverless-ip-range is an unused /28 IP range for Serverless VPN access
-
-```shell
-export DOMAIN_PROJECT_ID=your_gcp_project
-export VPC_NAME=vpc-name
-export SERVERLESS_REGION=serverless-region
-export SERVERLESS_IP_RANGE=serverless-ip-range
-```
-
-
 ###    Deploy Domain Join API to Container hosted in Compute Engine instance
 
     Note that for simplicity, I am using HTTP instead of HTTPS endpoint. There are many options in GCP which natively supports HTTPS, such as Cloud Function, Cloud Run...etc. However, in order to access your AD, these services need to integrated with VPC via Serverless VPC Access or VPC integration which can add complixity.
@@ -83,7 +62,16 @@ $JoinInfo = (Invoke-RestMethod `
 
 #####  Deploy Container on GCE
 
+-   Compile ksetpwd tool
+
+    Switch to parent folder of register-computer folder where ksetpwd folder resides. Run below command to compile ksetpwd. This command reads Makefile and output compiled binary to register-computer\\ksetpwd\\bin
+
+```shell
+make
+```
+
 -   Run below command to build and push container image to GCR
+
 ```shell
 docker build . -t gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest
 docker push gcr.io/$DOMAIN_PROJECT_ID/register-computer:latest
