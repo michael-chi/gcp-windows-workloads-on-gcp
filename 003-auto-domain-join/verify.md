@@ -27,6 +27,10 @@ gcloud compute instances create verify-join-01 \
 
 -   Create a new virutal machine
 
+    I experienced many issue while using HTTPS endpoint, all of those came from Powershell Invoke-WebRequest or Invoke-RestMethod could not properly handly TLS/SSL connection with domain join API endpoints. 
+
+    Most of internet posts suggest to add Tls1.2 support via Powershell cmdlet, however, in my case, I still experience errors.
+
 ```shell
 export REGISTER_URL=https://[GCP_DEFAULT_INTERNAL_FQDN]/register-computer
 export VPC_REGION=[VPC_REGION]

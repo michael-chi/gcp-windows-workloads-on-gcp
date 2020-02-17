@@ -22,7 +22,7 @@
 default: deploy
 
 prerequisites:
-	sudo apt-get install libkrb5-dev -y
+	apt-get install libkrb5-dev -y
 
 ksetpwd: prerequisites
 	make -C ksetpwd
