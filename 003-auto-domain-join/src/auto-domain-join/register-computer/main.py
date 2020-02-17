@@ -390,17 +390,24 @@ def register_computer(request):
     """
         Cloud Functions entry point.
     """
+    print("request.path=%s" % request.path)
+    print("request method=%s" % request.method)
     if request.path == "/cleanup" and request.method == "POST":
+        print("serving __cleanup_computers")
         return __cleanup_computers(request)
     elif request.path == "/register-computer" and request.method == "GET":
+        print("serving __serve_join_script")
         return __serve_join_script(request)
     elif request.path == "/register-computer" and request.method == "POST":
+        print("serving __register_computer")
         return __register_computer(request)
     else:
+        print("serving HTTP_BAD_METHOD")
         return flask.abort(HTTP_BAD_METHOD)
 
 
 if __name__ == "__main__":
+    print("web server running...")
     # Local testing/debugging only. This code is not run in Cloud Functions.
     from flask import Flask, request
 
@@ -409,6 +416,7 @@ if __name__ == "__main__":
 
     @app.route("/register-computer", methods=['GET', 'POST'])
     @app.route("/cleanup", methods=['GET', 'POST'])
+
     def index():
         return register_computer(request)
     app.run('0.0.0.0', debug=True, port=443, ssl_context=('./server.crt', './server.key'))  
