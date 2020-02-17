@@ -19,13 +19,12 @@
 # under the License.
 #
 
-flask>=1.0.3
-requests>=2.22
-ldap3>=2.5.2
-google-auth>=1.6.2
-google-auth-httplib2>=0.0.3
-google-api-python-client>=1.7.8
-google-cloud-kms>=1.0.0
-oauth2client>=4.1.3
-dnspython>=1.16
-pyOpenSSL
+default: deploy
+
+prerequisites:
+	apt-get install libkrb5-dev -y
+
+ksetpwd: prerequisites
+	make -C ksetpwd
+
+deploy: ksetpwd

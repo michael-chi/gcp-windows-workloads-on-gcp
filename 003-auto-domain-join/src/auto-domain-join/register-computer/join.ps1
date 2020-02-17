@@ -27,6 +27,11 @@
 #--------------------------------------------------------------------------------------------
 
 $ErrorActionPreference = "Stop"
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback ={$true}
+[Net.ServicePointManager]::SecurityProtocol="Tls12, Tls11, Tls, Ssl3"
+
+
+echo "https://%domain%/register-computer"
 
 # Fetch IdToken that we can use to authenticate the instance with.
 $IdToken = (Invoke-RestMethod `
@@ -37,7 +42,7 @@ $IdToken = (Invoke-RestMethod `
 $JoinInfo = (Invoke-RestMethod `
     -Headers @{"Authorization" = "Bearer $IdToken"} `
     -Method POST `
-    -Uri "https://%domain%/register-computer")
+    -Uri "http://%domain%/register-computer")
 
 Write-Host "Successfully registered computer account."
 $JoinInfoRedacted = $JoinInfo.PSObject.copy()

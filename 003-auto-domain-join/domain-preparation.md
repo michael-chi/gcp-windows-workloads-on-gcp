@@ -63,3 +63,6 @@ $CompRegistrar = New-ADUser `
 $CompRegistrar | Enable-ADAccount
 ```
 
+-   Create a child OU in GCP OU which we will be using to add machine instances to. This OU will be named after GCP's project Id, so you must have a GCP project created first.
+
+![Create child OU](../docs/img/2020-02-15-16-55-37.png)
