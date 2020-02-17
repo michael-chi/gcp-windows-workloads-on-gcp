@@ -9,7 +9,7 @@ export REGISTER_URL=https://[GCP_DEFAULT_INTERNAL_FQDN]/register-computer
 export VPC_REGION=[VPC_REGION]
 export VPC_SUBNET=[SUBNET_NAME]
 export ZONE=[ZONE]
-
+export TEST_PROJECT_ID=$DOMAIN_PROJECT_ID
 export true='$true'
 export text='$text'
 
