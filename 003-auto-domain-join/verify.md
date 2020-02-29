@@ -52,3 +52,10 @@ gcloud compute instances create verify-join-01 \
 "--metadata=sysprep-specialize-script-ps1=[System.Net.ServicePointManager]::ServerCertificateValidationCallback={$true};[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Ssl3;$text=(New-Object System.Net.WebClient).DownloadString('$REGISTER_URL'); iex($text)" \
 --project=$TEST_PROJECT_ID
 ```
+####    Firewall
+
+-   Create a firewall rule to allow [health check traffic](https://cloud.google.com/load-balancing/docs/health-checks#fw-rule) from below IP address ranges
+
+    -   35.191.0.0/16
+    -   130.211.0.0/22
+

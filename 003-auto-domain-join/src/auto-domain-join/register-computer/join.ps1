@@ -66,6 +66,18 @@ $Credentials = (New-Object pscredential -ArgumentList ([pscustomobject]@{ `
         UserName = $Null
         Password = (ConvertTo-SecureString -String $JoinInfo.ComputerPassword -AsPlainText -Force)[0]}))
 
+#   Michael - setup IIS
+# Install-WindowsFeature -Name NFS-Client
+# nfsadmin client stop
+# nfsadmin client start
+# $webAppInit = Get-WindowsFeature -Name "Web-AppInit"
+# Install-WindowsFeature $webAppInit -ErrorAction Continue
+# $webSite = New-Item IIS:\Sites\TestWeb -bindings @{protocol="http";bindingInformation=":80:localhost"} -physicalPath Z:\wwwroot
+# $appPool = New-Item IIS:\AppPools\TestWeb 
+# $appPool | Set-ItemProperty -Name "managedRuntimeVersion" -Value "v4.0" | Set-ItemProperty -Name "applicationDefaults.preloadEnabled" -Value True
+# $webSite | Set-ItemProperty -Name AppPool -Value $appPool
+#   End setup IIS
+
 $Attempt = 0
 do {
     try {
